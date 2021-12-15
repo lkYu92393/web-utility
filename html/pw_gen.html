@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+	<title>Utility</title>
+    <link rel="stylesheet" href="../css/preset/normalize.min.8.0.1.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+    <main>
+        <header><h2>placeholder</h2></header>
+        <section>
+            <input id="lower-case" type="checkbox" /> Lower case (a-z)<br />
+            <input id="upper-case" type="checkbox" /> Upper case (A-Z)<br />
+            <input id="number" type="checkbox" /> Number (0-9)<br />
+            <input id="special" type="checkbox" /> Special character (!@#$%^&*-_=+)<br />
+            <input id="bracket" type="checkbox" /> Special character (()[]{})<br />
+            <input id="length" type="number"/>
+            <button onclick="generate()">Generate</button>
+            <label id="output"></label>
+        </section>
+    </main>
+</body>
+<script src="js/pw_gen.js"></script>
+</html>
