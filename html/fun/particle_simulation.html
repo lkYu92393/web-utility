@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Gamedev Canvas Workshop</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        background: black;
+        color: white;
+      }
+      canvas {
+        background: #eee;
+        display: block;
+        margin: 0 auto;
+      }
+      div.container {
+        width: 800px;
+        margin: 10px auto;
+      }
+      div.param-container {
+        margin: 5px auto;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 3px 0;
+      }
+      div.button-container {
+        margin: 5px auto;
+        display: flex;
+        justify-content:  space-around;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="param-container">
+        <label for="num_ball">Number of ball</label>
+        <input id="num_ball" type="number" value="5"/>
+        <label for="radius">Maximum radius of ball</label>
+        <input id="radius" type="number" value="5"/>
+      </div>
+      <div class="button-container">
+        <input type="button" onclick="fire_simulation()" value="Start" />
+        <input type="button" onclick="pause_simulation()" value="Pause" />
+        <input type="button" onclick="stop_simulation()" value="Stop" />
+      </div>
+    </div>
+    <canvas id="myCanvas" width="2400" height="1800"></canvas>
+
+    <script>
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+
+      var simulation = null;
+      let pause = true;
+
+      let t = 0;
+      const dt = 1;
+
+      // 1 as fully elastic, 0 as totally inelastic
+      const elastic_constant_wall = 1;
+      const elastic_constant_obj = 1;
+
+      const air_friction_constant = 0;
+      const pixel_weight = 0.01;
+      const gravity_g = 9.98;
+
+      const random_color = () => {
+        var result           = '';
+        var characters       = 'abcdef0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < 6; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return '#' + result;
+      };
+
+      const get_current_speed = (ds, dds) => {
+        return (
+          ds +
+          ((dds - air_friction_constant * Math.sign(ds) * ds ** 2) * dt) / 1000
+        );
+      };
+
+      function Ball(x, y, r, color = "#0095DD") {
+        this.color = color;
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.dx = 30 * (Math.random() - 0.5);
+        this.dy = 30 * (Math.random() - 0.5);
+        this.ddx = 0;
+        this.ddy = this.r ** 2 * Math.PI * pixel_weight * gravity_g;
+      }
+
+      Ball.prototype.draw = function () {
+        {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+          ctx.closePath();
+
+          this.dx = get_current_speed(this.dx, this.ddx);
+          this.dy = get_current_speed(this.dy, this.ddy);
+
+          let boundary_condition_x = this.x + this.dx <= this.r && this.dx < 0 || this.x + this.dx >= canvas.width - this.r && this.dx > 0;
+          let boundary_condition_y = this.y + this.dy <= this.r && this.dy < 0 || this.y + this.dy >= canvas.height - this.r && this.dy > 0;
+
+          collision_list = obj_list.filter(i => i != this).map((item, index) => {
+            if ((item.r + this.r) ** 2 >= (item.x + item.dx - this.x - this.dx) ** 2 + (item.y + item.dy - this.y - this.dy) ** 2) {
+              let this_v = Math.sqrt(this.dx ** 2 + this.dy ** 2);
+              let item_v = Math.sqrt(item.dx ** 2 + item.dy ** 2);
+              let incident_rad = Math.atan((item.x - this.x)/(item.y - this.y));
+
+              this.dx = elastic_constant_obj * this_v * Math.sin(incident_rad);
+              this.dy = elastic_constant_obj * this_v * Math.cos(incident_rad);
+              item.dx = elastic_constant_obj*item_v * Math.sin(incident_rad + Math.PI);
+              item.dy = elastic_constant_obj*item_v * Math.cos(incident_rad + Math.PI);
+            }
+          });
+
+          if (boundary_condition_x) {
+            this.dx *= -elastic_constant_wall;
+          }
+
+          if (boundary_condition_y) {
+            this.dy *= -elastic_constant_wall;
+          }
+
+          this.x += this.dx;
+          this.y += this.dy;
+
+        }
+      }
+
+      var obj_list = [];
+
+      function fire_simulation() {
+        canvas.setAttribute('width', window.innerWidth);
+        canvas.setAttribute('height', parseInt(window.outerWidth*3/4));
+
+        if (obj_list.length == 0) {
+          let number_of_ball = parseInt(document.getElementById("num_ball").value);
+          let max_radius = parseInt(document.getElementById("radius").value);
+          for (let i = 0; i < number_of_ball; i++) {
+            let radius = 5+Math.ceil(Math.random() * max_radius);
+            obj_list.push(new Ball(
+              Math.floor(Math.random() * (canvas.width - radius * 2) + radius), 
+              Math.floor(Math.random() * (canvas.height - radius * 2) + radius),
+              radius,
+              random_color())
+            );
+          }
+          simulation = setInterval(tick, dt); 
+        }
+      }
+      function pause_simulation() {
+        if (pause) {
+          simulation = setInterval(tick, dt);
+        } else {
+          clearInterval(simulation);
+          pause = !pause;
+        }
+      }
+      function stop_simulation() {
+        clearInterval(simulation);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        obj_list = [];
+      }
+
+      function tick() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pause = false;
+        obj_list.map((item, index) => {
+          item.draw();
+        });
+      }
+    </script>
+  </body>
+</html>

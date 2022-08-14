@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+	<title>Utility</title>
+    <link rel="stylesheet" href="../../css/preset/normalize.min.8.0.1.css">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="css/pw_gen.css">
+</head>
+<body>
+    <main>
+        <header><h2>Password Generator</h2></header>
+        <section>
+            <div id="checkbox">
+                <div>
+                    <input id="lower-case" type="checkbox" checked /> Lower case (a-z)
+                </div>
+                <div>
+                    <input id="upper-case" type="checkbox" checked /> Upper case (A-Z)
+                </div>
+                <div>
+                    <input id="number" type="checkbox" checked /> Number (0-9)
+                </div>
+                <div>
+                    <input id="special" type="checkbox" checked /> Special character (!@#$%^&*-_=+)
+                </div>
+                <div>
+                    Length: <input id="length" type="number" value="8" />
+                </div>
+            </div>
+            <div>
+                <button onclick="generate()">Generate</button>
+            </div>
+            <div>
+                Output is:<label id="output"></label>
+            </div>
+        </section>
+    </main>
+</body>
+<script src="js/pw_gen.js"></script>
+</html>
