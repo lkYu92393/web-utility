@@ -9,7 +9,7 @@
 </head>
 <body>
     <main>
-        <header><h2>Password Generator</h2></header>
+        <header><h4>Password Generator</h4></header>
         <section>
             <div id="checkbox">
                 <div>
@@ -28,11 +28,13 @@
                     Length: <input id="length" type="number" value="8" />
                 </div>
             </div>
-            <div>
-                <button onclick="generate()">Generate</button>
-            </div>
-            <div>
-                Output is:<label id="output"></label>
+            <div id="generate">
+                <div>
+                    <button onclick="generate()">Generate</button>
+                </div>
+                <div>
+                    Output is: <label id="output"></label>
+                </div>
             </div>
         </section>
     </main>
