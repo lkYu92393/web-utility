@@ -1,0 +1,21 @@
+{
+	"hk_sector": {
+        "index"        : ["HSI"]
+        ,"hsi"         : ["0388.HK", "0669.HK"]
+        ,"it_service"  : ["2013.HK", "0700.HK", "9988.HK", "0772.HK", "3690.HK"]
+        ,"it_business" : ["0354.HK", "0268.HK", "3896.HK", "0909.HK", "9698.HK"]
+        ,"it_hardware" : ["1810.HK", "0285.HK", "0992.HK"]
+        ,"medic_bio"   : ["3759.HK", "9939.HK", "6127.HK", "2190.HK"]
+        ,"insurance"   : ["6060.HK", "2601.HK"]
+        ,"etf"         : ["2826.HK", "2820.HK", "2809.HK", "2807.HK", "2806.HK"]
+        ,"clothes"     : ["3998.HK"]
+        ,"bank"        : ["3988.HK"]
+    }
+    ,"us_sector": {
+        "index"        : ["SPY" , "QQQ" ]
+        ,"it"          : ["MSFT", "AMZN", "GOOGL", "NFLX", "META"]
+        ,"it_hardware" : ["NVDA", "AAPL"]
+        ,"ev"          : ["TSLA", "NIO" ]
+        ,"clothes"     : ["LULU"]
+    }
+}
