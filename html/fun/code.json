@@ -13,6 +13,7 @@
     }
     ,"us_sector": {
         "index"        : ["SPY" , "QQQ" ]
+        ,"other"       : ["BRK-B"]
         ,"it"          : ["MSFT", "AMZN", "GOOG", "NFLX", "META", "SPOT", "SNAP"]
         ,"it_hardware" : ["NVDA", "AAPL", "CSCO", "ORCL", "AMD"]
         ,"chips"       : ["QCOM", "AMAT"]
