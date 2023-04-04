@@ -1,28 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gamedev Canvas Workshop</title>
+  <link rel="stylesheet" href="../../css/preset/normalize.min.8.0.1.css">
+  <link rel="stylesheet" href="../../css/base.css">
+  <script src="./../../js/navbar.js"></script> 
   <style>
-    * {
-      padding: 0;
-      margin: 0;
-    }
-
-    body {
-      background-color: black;
-    }
-
-    canvas {
-      background: #eee;
-      display: block;
-      margin: 0 auto;
-    }
-
     div.container {
       width: 600px;
-      margin: 10px auto;
+      margin: 0 auto;
     }
 
     div.param-container {
@@ -41,14 +31,17 @@
 </head>
 
 <body>
-  <div class="container">
-    <div class="button-container">
-      <input type="button" onclick="fire_simulation()" value="Start" />
-      <input type="button" onclick="pause_simulation()" value="Pause" />
-      <input type="button" onclick="stop_simulation()" value="Stop" />
+  <navbar id="navbar"></navbar>
+  <div>
+    <div class="container">
+      <div class="button-container">
+        <input type="button" onclick="fire_simulation()" value="Start" />
+        <input type="button" onclick="pause_simulation()" value="Pause" />
+        <input type="button" onclick="stop_simulation()" value="Stop" />
+      </div>
     </div>
+    <canvas id="myCanvas" width="600" height="400"></canvas>
   </div>
-  <canvas id="myCanvas" width="600" height="400"></canvas>
 
   <script>
     const canvas = document.getElementById("myCanvas");

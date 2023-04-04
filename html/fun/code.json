@@ -13,9 +13,12 @@
     }
     ,"us_sector": {
         "index"        : ["SPY" , "QQQ" ]
-        ,"it"          : ["MSFT", "AMZN", "GOOGL", "NFLX", "META"]
-        ,"it_hardware" : ["NVDA", "AAPL"]
+        ,"it"          : ["MSFT", "AMZN", "GOOG", "NFLX", "META", "SPOT", "SNAP"]
+        ,"it_hardware" : ["NVDA", "AAPL", "CSCO", "ORCL", "AMD"]
+        ,"chips"       : ["QCOM", "AMAT"]
+        ,"commercial"  : ["WMT"]
         ,"ev"          : ["TSLA", "NIO" ]
         ,"clothes"     : ["LULU"]
+        ,"health"      : ["CVS"]
     }
 }

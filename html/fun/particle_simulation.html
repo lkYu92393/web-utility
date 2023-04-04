@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Gamedev Canvas Workshop</title>
+    <script src="./../../js/navbar.js"></script> 
+    <link rel="stylesheet" href="../../css/preset/normalize.min.8.0.1.css">
+    <!-- <link rel="stylesheet" href="../../css/base.css"> -->
+  <script src="./../../js/navbar.js"></script> 
     <style>
       * {
         padding: 0;
@@ -19,7 +23,7 @@
       }
       div.container {
         width: 800px;
-        margin: 10px auto;
+        margin: 60px auto 0;
       }
       div.param-container {
         margin: 5px auto;
@@ -35,6 +39,7 @@
     </style>
   </head>
   <body>
+    <navbar id="navbar"></navbar>
     <div class="container">
       <div class="param-container">
         <label for="num_ball">Number of ball</label>
@@ -110,7 +115,7 @@
           let boundary_condition_x = this.x + this.dx <= this.r && this.dx < 0 || this.x + this.dx >= canvas.width - this.r && this.dx > 0;
           let boundary_condition_y = this.y + this.dy <= this.r && this.dy < 0 || this.y + this.dy >= canvas.height - this.r && this.dy > 0;
 
-          collision_list = obj_list.filter(i => i != this).map((item, index) => {
+          let collision_list = obj_list.filter(i => i != this).map((item, index) => {
             if ((item.r + this.r) ** 2 >= (item.x + item.dx - this.x - this.dx) ** 2 + (item.y + item.dy - this.y - this.dy) ** 2) {
               let this_v = Math.sqrt(this.dx ** 2 + this.dy ** 2);
               let item_v = Math.sqrt(item.dx ** 2 + item.dy ** 2);

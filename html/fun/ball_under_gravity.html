@@ -1,83 +1,78 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Gamedev Canvas Workshop</title>
-    <style>
-      * {
-        padding: 0;
-        margin: 0;
-      }
-  
-      body {
-        background-color: black;
-      }
-  
-      canvas {
-        background: #eee;
-        display: block;
-        margin: 0 auto;
-      }
-    </style>
-  </head>
-  <body>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gamedev Canvas Workshop</title>
+  <link rel="stylesheet" href="../../css/preset/normalize.min.8.0.1.css">
+  <link rel="stylesheet" href="../../css/base.css">
+  <script src="./../../js/navbar.js"></script> 
+</head>
+
+<body>
+  <navbar id="navbar"></navbar>
+  <div>
     <canvas id="myCanvas" width="600" height="400"></canvas>
+  </div>
 
-    <script>
-      var canvas = document.getElementById("myCanvas");
-      var ctx = canvas.getContext("2d");
+  <script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
 
-      let t = 0;
-      let dt = 10;
+    let t = 0;
+    let dt = 10;
 
-      // 1 as fully elastic, 0 as totally inelastic
-      let elastic_constant = 1;
+    // 1 as fully elastic, 0 as totally inelastic
+    let elastic_constant = 1;
 
-      let air_friction_constant = 0.03;
+    let air_friction_constant = 0.03;
 
-      let x = canvas.width / 2;
-      let y = 30 * (1 + Math.random());
-      let dx = 10 * (Math.random() - 0.5);
-      let dy = 10 * (Math.random() - 0.5);
-      let ddx = 0;
-      let ddy = 10;
+    let x = canvas.width / 2;
+    let y = 30 * (1 + Math.random());
+    let dx = 10 * (Math.random() - 0.5);
+    let dy = 10 * (Math.random() - 0.5);
+    let ddx = 0;
+    let ddy = 10;
 
-      let ball_radius = 10;
+    let ball_radius = 10;
 
-      const get_current_speed = (ds, dds) => {
-        return (
-          ds +
-          ((dds - air_friction_constant * Math.sign(ds) * ds ** 2) * dt) / 1000
-        );
-      };
+    const get_current_speed = (ds, dds) => {
+      return (
+        ds +
+        ((dds - air_friction_constant * Math.sign(ds) * ds ** 2) * dt) / 1000
+      );
+    };
 
-      const draw_current_frame = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.beginPath();
-        ctx.arc(x, y, ball_radius, 0, Math.PI * 2);
-        ctx.fillStyle = "#0095DD";
-        ctx.fill();
-        ctx.closePath();
-      };
+    const draw_current_frame = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+      ctx.arc(x, y, ball_radius, 0, Math.PI * 2);
+      ctx.fillStyle = "#0095DD";
+      ctx.fill();
+      ctx.closePath();
+    };
 
-      function draw() {
-        draw_current_frame();
+    function draw() {
+      draw_current_frame();
 
-        t += dt;
-        dy = get_current_speed(dy, ddy);
-        dx = get_current_speed(dx, ddx);
+      t += dt;
+      dy = get_current_speed(dy, ddy);
+      dx = get_current_speed(dx, ddx);
 
-        if (y >= canvas.height - ball_radius) {
-          dy = -elastic_constant * dy;
-        }
-        if (x <= ball_radius || x >= canvas.width - ball_radius) {
-          dx = -elastic_constant * dx;
-        }
-
-        x += dx;
-        y += dy;
+      if (y >= canvas.height - ball_radius) {
+        dy = -elastic_constant * dy;
       }
-      setInterval(draw, dt);
-    </script>
-  </body>
+      if (x <= ball_radius || x >= canvas.width - ball_radius) {
+        dx = -elastic_constant * dx;
+      }
+
+      x += dx;
+      y += dy;
+    }
+    setInterval(draw, dt);
+  </script>
+</body>
+
 </html>

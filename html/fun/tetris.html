@@ -1,196 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./../../js/navbar.js"></script> 
+    <link rel="stylesheet" href="../../css/preset/normalize.min.8.0.1.css">
+    <link rel="stylesheet" href="../../css/base.css">
     <style>
-        
-        * {
-        padding: 0;
-        margin: 0;
-        }
-
-        canvas {
-        background: #eee;
-        display: block;
-        margin: 0 auto;
-        }
-
-        div.container {
+        body>div>div {
             display: flex;
             flex-direction: column;
-            width: 520px;
+            width: 320px;
             margin: 10px auto;
         }
-
-        section#panel {
-            margin: 20px;
-        }
-
-        .hidden {
-            display: none;
-        }
     </style>
-    <title>Document</title>
-  </head>
-  <body>
-    <div class="container">
-        <button onclick="simulation = setInterval(tick, dt); frame.block=getBlock(frame.blockList[0]);">Start</button>
-        <section id="canvas" class="">
-            <canvas id="myCanvas" width="600" height="1000"></canvas>
-        </section>
+    <title>Web Tetris</title>
+</head>
+
+<body>
+    <navbar id="navbar"></navbar>
+    <div>
+        <div>
+            <button onclick="simulation = setInterval(tick, dt); frame.block=getBlock(frame.blockList[0]);">Start</button>
+            <div id="canvas">
+                <canvas id="myCanvas" width="600" height="1000"></canvas>
+            </div>
+        </div>
     </div>
-  </body>
+</body>
+<script>
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
 
-    <!-- <script>
-        let gameId = -1;
-        let games = [];
-        let socketNum = -1;
-        const writeLog = (msg) => {
-            // document.querySelzector("#console").textContent = msg;
-        }
-        let socket = new WebSocket('ws://localhost:18080');
-        socket.addEventListener("message", (event) => {
-            writeLog(event.data);
-            const msg = JSON.parse(event.data);
-            switch (msg.message) {
-                case "Connected":
-                {
-                    socketNum = msg.remarks;
-                    break;
-                }
-                case "GAMEID":
-                {
-                    gameId = msg.remarks;
-                    document.querySelector("#status").textContent = `Your game id is ${gameId}. Please wait for player to join.`;
-                    document.querySelector("#game-select").classList.add("hidden");
-                    break;
-                }
-                case "ROOM":
-                {
-                    const data = JSON.parse(msg.remarks);
-                    if (JSON.parse(data.games).length > 0) {
-                        games = JSON.parse(data.games);
-                        document.querySelector("#game-room").innerHTML = 
-                        JSON.parse(data.games).map(i => `<option value="${i.gameId}" ${i.gameId == gameId ? "disabled" : ""}>${i.player}'s game</option>`).join(",");
-                    } else {
-                        document.querySelector("#game-room").innerHTML = "<option value='' disabled>NO GAME</option>";
-                    }
-                    break;
-                }
-                case "START":
-                {
-                    document.querySelector("#panel").classList.add("hidden");
-                    document.querySelector("#canvas").classList.remove("hidden");
-                    simulation = setInterval(tick, dt);
-                    frame.blockList = msg.remarks.split(',').map(i => parseInt(i));
-                    frame.block = getBlock(frame.blockList[frame.sequence]);
-                    frame.sequence++;
-                    break;
-                }
-                case "NEWBLOCK":
-                {
-                    let block = parseInt(msg.remarks);
-                    frame.blockList.push(block);
-                    break;
-                }
-                case "RIVALGRID":
-                {
-                    rivalFrame.gridList = JSON.parse(msg.remarks);
-                    break;
-                }
-                case "WIN":
-                {
-                    document.querySelector("#status").textContent = `You win.`;
-                    resetUI();
-                    frame = new Frame(10, 24);
-                    break;
-                }
-            }
-        })
+    const gridWidth = 10;
+    const gridHeight = 24;
+    const gridSize = 20;
+    const padding = 60;
 
-        const createMessage = (message, remarks) => {
-            return JSON.stringify({
-                sender: socketNum,
-                message: message,
-                remarks: remarks
-            });
-        }
+    const panelWidth = 400;
 
-        socket.addEventListener("open", (event) => {
-            socket.send(JSON.stringify({
-                sender: "",
-                message: "GETID",
-                remarks: ""
-            }));
-        })
+    canvas.width = gridWidth * gridSize + padding * 2;
+    canvas.height = gridHeight * gridSize + padding * 2;
 
-        const resetUI = () => {
-            clearInterval(simulation);
-            document.querySelector("#panel").classList.remove("hidden");
-            document.querySelector("#canvas").classList.add("hidden");
-            document.querySelector("#game-select").classList.remove("hidden");
-            refresh();
-        }
+    let simulation = null;
+    const dt = 50;
+    let modulo = 5;
 
-        const refresh = () => {
-            socket.send(createMessage("GETID", ""));
-        }
+    const Blocks = [
+        [[0, 0], [0, 1], [1, 0], [1, 1]],
+        [[0, 0], [0, 1], [0, 2], [0, -1]],
+        [[0, 0], [1, 0], [0, -1], [1, 1]],
+        [[0, 0], [1, 0], [0, 1], [1, -1]],
+        [[0, 0], [1, 0], [-1, 0], [0, 1]],
+        [[0, 0], [1, 0], [0, 1], [0, 2]],
+        [[0, 0], [1, 0], [1, 1], [1, 2]]
+    ]
 
-        const newgame = () => {
-            socket.send(createMessage("NEWGAME", ""));
-        }
+    const getBlock = (num) => {
+        const block = Math.floor(Math.random() * Blocks.length);
+        return Blocks[block];
+    }
 
-        const joingame = () => {
-            socket.send(createMessage("JOINGAME", document.querySelector("#game-room").value));
-        }
-    </script> -->
+    const transformBlock = (block) => {
+        return block.map(point => [point[1], -point[0]]);
+    }
 
-    <script>            
-        const canvas = document.getElementById("myCanvas");
-        const ctx = canvas.getContext("2d");
+    let upPressed = false;
+    let rightPressed = false;
+    let leftPressed = false;
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
 
-        const gridWidth = 10;
-        const gridHeight = 24;
-        const gridSize = 40;
-        const padding = 60;
-
-        const panelWidth = 400;
-        
-        canvas.width = gridWidth * gridSize + padding * 2;
-        canvas.height = gridHeight * gridSize + padding * 2;
-
-        let simulation = null;
-        const dt = 50;
-        let modulo = 5;
-        
-        const Blocks = [
-            [[0, 0], [0, 1], [1, 0], [1, 1]],
-            [[0, 0], [0, 1], [0, 2], [0, -1]],
-            [[0, 0], [1, 0], [0, -1], [1, 1]],
-            [[0, 0], [1, 0], [0, 1], [1, -1]],
-            [[0, 0], [1, 0], [-1, 0], [0, 1]],
-            [[0, 0], [1, 0], [0, 1], [0, 2]],
-            [[0, 0], [1, 0], [1, 1], [1, 2]]
-        ]
-
-        const getBlock = (num) => {
-            const block = Math.floor(Math.random() * Blocks.length);
-            return Blocks[block];
-        }
-
-        const transformBlock = (block) => {
-            return block.map(point => [point[1], -point[0]]);
-        }
-
-        let upPressed = false;
-        let rightPressed = false;
-        let leftPressed = false;
-        document.addEventListener("keydown", keyDownHandler, false);
-        document.addEventListener("keyup", keyUpHandler, false);
-
-        function keyDownHandler(e) {
+    function keyDownHandler(e) {
         if (e.key == "Up" || e.key == "ArrowUp") {
             upPressed = true;
         } else if (e.key == "Down" || e.key == "ArrowDown") {
@@ -200,162 +83,163 @@
         } else if (e.key == "Left" || e.key == "ArrowLeft") {
             leftPressed = true;
         }
-        }
+    }
 
-        function keyUpHandler(e) {
-            if (e.key == "Up" || e.key == "ArrowUp") {
-                upPressed = false;
-            } else if (e.key == "Down" || e.key == "ArrowDown") {
-                modulo = 5;
-            } else if (e.key == "Right" || e.key == "ArrowRight") {
-                rightPressed = false;
-            } else if (e.key == "Left" || e.key == "ArrowLeft") {
-                leftPressed = false;
+    function keyUpHandler(e) {
+        if (e.key == "Up" || e.key == "ArrowUp") {
+            upPressed = false;
+        } else if (e.key == "Down" || e.key == "ArrowDown") {
+            modulo = 5;
+        } else if (e.key == "Right" || e.key == "ArrowRight") {
+            rightPressed = false;
+        } else if (e.key == "Left" || e.key == "ArrowLeft") {
+            leftPressed = false;
+        }
+    }
+
+    const colorWhite = "#fff";
+    const colorGray = "#aaa";
+
+    const emptyGrid = (x, y) => {
+        let gridList = [];
+        for (let j = 0; j < y; j++) {
+            let tempArray = [];
+            for (let i = 0; i < x; i++) {
+                tempArray.push({ color: colorWhite })
             }
+            gridList.push(tempArray);
         }
+        return gridList;
+    }
 
-        const colorWhite = "#fff";
-        const colorGray = "#aaa";
+    function Frame(x, y) {
+        this.x = x;
+        this.y = y;
+        this.sequence = 0;
+        this.blockList = [];
+        this.block = null;
+        this.coor = [Math.floor(this.x / 2), 0];
+        this.color = "#f00";
 
-        const emptyGrid = (x, y) => {
-            let gridList = [];
-            for (let j = 0; j< y; j++) {
-                let tempArray = [];
-                for (let i = 0; i < x; i++) {
-                    tempArray.push({ color: colorWhite })
-                }
-                gridList.push(tempArray);
-            }
-            return gridList;
-        }
+        this.gridList = emptyGrid(this.x, this.y);
+    }
 
-        function Frame(x, y) {
-            this.x = x;
-            this.y = y;
-            this.sequence = 0;
-            this.blockList = [];
-            this.block = null;
-            this.coor = [Math.floor(this.x / 2), 0];
-            this.color = "#f00";
+    const drawSquare = (x, y, color) => {
+        ctx.beginPath();
+        ctx.rect(x, y, gridSize, gridSize);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.closePath();
+    }
 
-            this.gridList = emptyGrid(this.x, this.y);
-        }
+    Frame.prototype.cleanAndRefill = function () {
+        this.block.forEach(point => {
+            this.gridList[this.coor[1] + point[1]][this.coor[0] + point[0]].color = colorGray;
+        });
 
-        const drawSquare = (x, y, color) => {
-            ctx.beginPath();
-            ctx.rect(x, y, gridSize, gridSize);
-            ctx.fillStyle = color;
-            ctx.fill();
-            ctx.closePath();
-        }
-
-        Frame.prototype.cleanAndRefill = function () {
-            this.block.forEach(point => {
-                this.gridList[this.coor[1] + point[1]][this.coor[0] + point[0]].color = colorGray;
-            });
-
-            let cleanCount = 0;
-            for (let j = this.y - 1; j >= 0; j--) {
-                if (this.gridList[j].every(i => i.color != colorWhite)) {
+        let cleanCount = 0;
+        for (let j = this.y - 1; j >= 0; j--) {
+            if (this.gridList[j].every(i => i.color != colorWhite)) {
                 this.gridList.splice(j, 1);
                 cleanCount++;
-                }
-            }
-            for (let j = 0; j < cleanCount; j++) {
-                let tempArray = [];
-                for (let i = 0; i < this.x; i++) {
-                tempArray.push({ color: colorWhite});
-                }
-                this.gridList.unshift(tempArray);
             }
         }
-
-        Frame.prototype.draw = function() {
-            for (let i in this.block) {
-                if (this.block[i][1] + this.coor[1] > 23 || this.block[i][1] + this.coor[1] < 0) continue;
-                this.gridList[this.coor[1] + this.block[i][1]][this.coor[0] + this.block[i][0]].color = colorWhite;
-            }
-
-            if (upPressed) {
-                let tempBlock = transformBlock(this.block);
-                let hitStop = tempBlock.map(point => point[0] + this.coor[0] < 0 || point[0] + this.coor[0] > 9
-                                            || point[1] + this.coor[1] > 23 || point[1] + this.coor[1] < 0
-                                            || this.gridList[point[1] + this.coor[1]][point[0] + this.coor[0]].color == colorGray)
-                .reduce((a,b) => a || b);
-                if (!hitStop) {
-                    this.block = tempBlock;
-                }
-                upPressed = !upPressed;
-            }
-
-            if (leftPressed) {
-                let hitStop = this.block.map(point => point[0] + this.coor[0] == 0 || this.gridList[point[1] + this.coor[1]][point[0] + this.coor[0] - 1].color == colorGray)
-                .reduce((a,b) => a || b);
-                if (!hitStop) {
-                    this.coor[0]--;
-                }
-                leftPressed = !leftPressed;
-            }
-
-            if (rightPressed) {
-                let hitStop = this.block.map(point => point[0] + this.coor[0] == 9 || this.gridList[point[1] + this.coor[1]][point[0] + this.coor[0] + 1].color == colorGray)
-                .reduce((a,b) => a || b);
-                if (!hitStop) {
-                    this.coor[0]++;
-                }
-                rightPressed = !rightPressed;
-            }
-            if (drawCount % modulo == 0) {
-                this.coor = [this.coor[0], this.coor[1] + 1]
-            }
-            for (let i in this.block) {
-                if (this.block[i][1] + this.coor[1] > 23 || this.block[i][1] + this.coor[1] < 0) continue;
-                this.gridList[this.coor[1] + this.block[i][1]][this.coor[0] + this.block[i][0]].color = this.color;
-            }
-
+        for (let j = 0; j < cleanCount; j++) {
+            let tempArray = [];
             for (let i = 0; i < this.x; i++) {
-                for (let j = 0; j < this.y; j++) {
-                    ctx.strokeRect(padding + i * gridSize, padding + j * gridSize, gridSize, gridSize);
-                    drawSquare(padding + i * gridSize, padding + j * gridSize, this.gridList[j][i].color);
-                }
+                tempArray.push({ color: colorWhite });
             }
+            this.gridList.unshift(tempArray);
+        }
+    }
+
+    Frame.prototype.draw = function () {
+        for (let i in this.block) {
+            if (this.block[i][1] + this.coor[1] > 23 || this.block[i][1] + this.coor[1] < 0) continue;
+            this.gridList[this.coor[1] + this.block[i][1]][this.coor[0] + this.block[i][0]].color = colorWhite;
         }
 
-        Frame.prototype.checkCondition = function() {
-        
-            let hitStop = this.block.map(point => this.coor[1] + point[1] >= 23 || this.gridList[point[1] + this.coor[1] + 1][point[0] + this.coor[0]].color == colorGray).reduce((a,b) => a || b);
-            if (hitStop) {
-                if (this.coor[1] + this.block.map(a => a[1]).reduce((a,b)=> Math.min(a,b)) <= 1) {
-                    clearInterval(simulation);
-                    frame = new Frame(10, 24);
-                    return;
-                }
-                this.cleanAndRefill();
-                this.block = getBlock(this.blockList[this.sequence]);
-                this.sequence++;
-                this.blockList.push(Math.floor(Math.random() * 7));
-                this.coor = [Math.floor(this.x / 2), 0];
+        if (upPressed) {
+            let tempBlock = transformBlock(this.block);
+            let hitStop = tempBlock.map(point => point[0] + this.coor[0] < 0 || point[0] + this.coor[0] > 9
+                || point[1] + this.coor[1] > 23 || point[1] + this.coor[1] < 0
+                || this.gridList[point[1] + this.coor[1]][point[0] + this.coor[0]].color == colorGray)
+                .reduce((a, b) => a || b);
+            if (!hitStop) {
+                this.block = tempBlock;
+            }
+            upPressed = !upPressed;
+        }
+
+        if (leftPressed) {
+            let hitStop = this.block.map(point => point[0] + this.coor[0] == 0 || this.gridList[point[1] + this.coor[1]][point[0] + this.coor[0] - 1].color == colorGray)
+                .reduce((a, b) => a || b);
+            if (!hitStop) {
+                this.coor[0]--;
+            }
+            leftPressed = !leftPressed;
+        }
+
+        if (rightPressed) {
+            let hitStop = this.block.map(point => point[0] + this.coor[0] == 9 || this.gridList[point[1] + this.coor[1]][point[0] + this.coor[0] + 1].color == colorGray)
+                .reduce((a, b) => a || b);
+            if (!hitStop) {
+                this.coor[0]++;
+            }
+            rightPressed = !rightPressed;
+        }
+        if (drawCount % modulo == 0) {
+            this.coor = [this.coor[0], this.coor[1] + 1]
+        }
+        for (let i in this.block) {
+            if (this.block[i][1] + this.coor[1] > 23 || this.block[i][1] + this.coor[1] < 0) continue;
+            this.gridList[this.coor[1] + this.block[i][1]][this.coor[0] + this.block[i][0]].color = this.color;
+        }
+
+        for (let i = 0; i < this.x; i++) {
+            for (let j = 0; j < this.y; j++) {
+                ctx.strokeRect(padding + i * gridSize, padding + j * gridSize, gridSize, gridSize);
+                drawSquare(padding + i * gridSize, padding + j * gridSize, this.gridList[j][i].color);
             }
         }
-        
-        let frame = new Frame(10, 24);
+    }
 
-        let drawCount = 0;
-        let bottomReached = true;
+    Frame.prototype.checkCondition = function () {
 
-        const drawCurrentFrame = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            drawCount++;
-            frame.draw();
-            if (drawCount % modulo == 0) {
-                drawCount = 0;
+        let hitStop = this.block.map(point => this.coor[1] + point[1] >= 23 || this.gridList[point[1] + this.coor[1] + 1][point[0] + this.coor[0]].color == colorGray).reduce((a, b) => a || b);
+        if (hitStop) {
+            if (this.coor[1] + this.block.map(a => a[1]).reduce((a, b) => Math.min(a, b)) <= 1) {
+                clearInterval(simulation);
+                frame = new Frame(10, 24);
+                return;
             }
-            frame.checkCondition();
-        };
+            this.cleanAndRefill();
+            this.block = getBlock(this.blockList[this.sequence]);
+            this.sequence++;
+            this.blockList.push(Math.floor(Math.random() * 7));
+            this.coor = [Math.floor(this.x / 2), 0];
+        }
+    }
 
-        function tick() {
-            drawCurrentFrame();
-        };
-    </script>
+    let frame = new Frame(10, 24);
+
+    let drawCount = 0;
+    let bottomReached = true;
+
+    const drawCurrentFrame = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        drawCount++;
+        frame.draw();
+        if (drawCount % modulo == 0) {
+            drawCount = 0;
+        }
+        frame.checkCondition();
+    };
+
+    function tick() {
+        drawCurrentFrame();
+    };
+</script>
+
 </html>
