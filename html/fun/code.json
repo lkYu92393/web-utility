@@ -20,6 +20,7 @@
         ,"commercial"  : ["WMT"]
         ,"ev"          : ["TSLA", "NIO" ]
         ,"clothes"     : ["LULU"]
-        ,"health"      : ["CVS"]
+        ,"health"      : ["CVS" ]
+        ,"bank"        : ["C"   , "BAC" , "JPM"]
     }
 }
