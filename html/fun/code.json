@@ -18,10 +18,12 @@
         ,"it"          : ["MSFT", "AMZN", "GOOG", "NFLX", "META", "SPOT", "SNAP"]
         ,"it_hardware" : ["NVDA", "AAPL", "CSCO", "ORCL", "AMD"]
         ,"chips"       : ["QCOM", "AMAT"]
-        ,"commercial"  : ["WMT"]
+        ,"commercial"  : ["WMT" ]
         ,"ev"          : ["TSLA", "NIO" ]
         ,"clothes"     : ["LULU"]
         ,"health"      : ["CVS" ]
         ,"bank"        : ["C"   , "BAC" , "JPM"]
+    	,"energy"      : ["INDO"]
+	,"smallcap"    : ["GFAI", "GROM", "OTRK", "MMAT","MULN", "PETZ"]
     }
 }
