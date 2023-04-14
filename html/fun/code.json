@@ -10,6 +10,7 @@
         ,"etf"         : ["2826.HK", "2820.HK", "2809.HK", "2807.HK", "2806.HK"]
         ,"clothes"     : ["3998.HK"]
         ,"bank"        : ["3988.HK"]
+	,"misc"        : ["2208.HK","0558.HK"]
     }
     ,"us_sector": {
         "index"        : ["SPY" , "QQQ" ]
