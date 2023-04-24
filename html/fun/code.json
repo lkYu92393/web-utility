@@ -8,10 +8,10 @@
         ,"medic_bio"   : ["3759.HK", "9939.HK", "6127.HK", "2190.HK"]
         ,"insurance"   : ["6060.HK", "2601.HK"]
         ,"etf"         : ["2826.HK", "2820.HK", "2809.HK", "2807.HK", "2806.HK"]
-        ,"clothes"     : ["3998.HK"]
+        ,"clothes"     : ["3998.HK", "2232.HK"]
         ,"bank"        : ["3988.HK", "0005.HK"]
-	,"misc"        : ["2208.HK", "0558.HK"]
 	,"telecomm"    : ["0658.HK", "0941.HK"]
+	,"misc"        : ["2208.HK", "0558.HK"]
     }
     ,"us_sector": {
         "index"        : ["SPY" , "QQQ" ]
