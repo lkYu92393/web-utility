@@ -20,7 +20,7 @@
         ,"it"          : ["MSFT", "AMZN", "GOOG", "NFLX", "META", "SPOT", "SNAP"]
         ,"it_hardware" : ["NVDA", "AAPL", "CSCO", "ORCL", "AMD"]
         ,"chips"       : ["QCOM", "AMAT"]
-        ,"commercial"  : ["WMT" ]
+        ,"commercial"  : ["WMT" , "SPY" ]
         ,"ev"          : ["TSLA", "NIO" ]
         ,"clothes"     : ["LULU"]
         ,"health"      : ["CVS" ]
