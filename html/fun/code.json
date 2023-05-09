@@ -18,7 +18,7 @@
         "index"        : ["SPY" , "QQQ" ]
         ,"other"       : ["BRK-B"]
         ,"it"          : ["MSFT", "AMZN", "GOOG", "NFLX", "META", "SPOT", "SNAP"]
-        ,"it_hardware" : ["NVDA", "AAPL", "CSCO", "ORCL", "AMD"]
+        ,"it_hardware" : ["NVDA", "AAPL", "CSCO", "ORCL", "AMD" , "INTC", "MU"]
         ,"chips"       : ["QCOM", "AMAT"]
         ,"commercial"  : ["WMT" , "SPY" ]
         ,"ev"          : ["TSLA", "NIO" ]
