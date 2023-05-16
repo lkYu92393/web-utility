@@ -22,7 +22,7 @@
         ,"chips"       : ["QCOM", "AMAT"]
         ,"commercial"  : ["WMT" , "SPY" ]
         ,"ev"          : ["TSLA", "NIO" ]
-        ,"zn"          : ["BABA", "JD"  ]
+        ,"zn"          : ["BABA", "JD"  , "BIDU"]
         ,"clothes"     : ["LULU"]
         ,"health"      : ["CVS" ]
         ,"bank"        : ["C"   , "BAC" , "JPM"]
