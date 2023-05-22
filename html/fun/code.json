@@ -1,18 +1,18 @@
 {
 	"hk_sector": {
         "index"               : ["HSI"]
-        ,"hsi"                : ["0388.HK", "0669.HK"]
+        ,"hsi"                : ["0388.HK", "0669.HK", "2313.HK"]
         ,"it_service"         : ["2013.HK", "0700.HK", "9988.HK", "0772.HK", "3690.HK"]
         ,"it_business"        : ["0354.HK", "0268.HK", "3896.HK", "0909.HK", "9698.HK"]
         ,"it_hardware"        : ["1810.HK", "0285.HK", "0992.HK", "2018.HK"]
-        ,"medic_bio"          : ["3759.HK", "9939.HK", "6127.HK", "2190.HK", "1696.HK"]
-        ,"insurance"          : ["6060.HK", "2601.HK", "2628.HK"]
+        ,"medic_bio"          : ["2269.HK", "3759.HK", "9939.HK", "6127.HK", "2190.HK", "1696.HK"]
+        ,"insurance"          : ["6060.HK", "2601.HK", "2628.HK", "1299.HK"]
 	,"semiconductor"      : ["0981.HK", "1347.HK"]
         ,"etf"                : ["2826.HK", "2820.HK", "2809.HK", "2807.HK", "2806.HK"]
         ,"clothes"            : ["3998.HK", "2232.HK"]
         ,"bank"               : ["3988.HK", "0005.HK"]
     	,"telecomm"           : ["0658.HK", "0941.HK"]
-    	,"misc"               : ["2208.HK", "0558.HK", "2190.HK"]
+    	,"misc"               : ["2208.HK", "0558.HK", "2190.HK", "0788.HK"]
     }
     ,"us_sector": {
         "index"        : ["SPY" , "QQQ" ]
