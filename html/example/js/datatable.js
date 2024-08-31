@@ -11,7 +11,7 @@
 const firstNameList = ['Liam', 'Noah', 'Oliver', 'James', 'Elijah', 'Mateo', 'Theodore', 'Henry', 'Lucas', 'William']
 const lastNameList = ['Smith', 'Johnson', 'Brown', 'Jones', 'Miller', 'Davis', 'Martinez', 'Lopez', 'Thomas', 'Moore']
 const randomDateGen = (startYear) => {
-    const year = (Math.round(Math.random() * 10) + startYear).toString()
+    const year = (Math.round(Math.random() * 5) + startYear).toString()
     const month = (Math.round(Math.random() * 11) + 1).toString()
     const day = (Math.round(Math.random() * 27) + 1).toString()
     // const date = (year + (month.length == 1 ? '-0' : '-') + month + (day.length == 1 ? '-0':'-') + day)
@@ -25,9 +25,10 @@ const dataSrcFunc = (noOfRecord) => {
             id: index,
             firstName: firstNameList[Math.round(Math.random() * (firstNameList.length-1))],
             lastName: lastNameList[Math.round(Math.random() * (lastNameList.length - 1))],
-            age: Math.round(Math.random() * 30) + 18,
-            startDate: randomDateGen(2000),
-            endDate: randomDateGen(2011),
+            age: Math.round(Math.random() * 30) + 30,
+            salary: (Math.round(Math.random() * 30) + 18) * 1000,
+            startDate: randomDateGen(2011),
+            endDate: randomDateGen(2017),
         }
     })
 }
@@ -63,12 +64,14 @@ const DOMContentLoadedHandler = () => {
 
     datatableTarget = new DataTable('#example', {
         layout: {
-            // topStart: 'info',
+            topStart: 'pageLength',
             topEnd: {
-                search: {
+                'search':{
                     placeholder: 'Search'
                 }
-            }
+            },
+            bottomStart: 'info',
+            bottomEnd: 'paging'
         },
         data: dataSrcFunc(200),
         columns: [
@@ -85,7 +88,8 @@ const DOMContentLoadedHandler = () => {
             { data: 'endDate' },
         ],
         columnDefs: [
-            { target: [3, 4], type: 'date-sort' }
+            { target: [3], className: 'dt-body-right' },
+            { target: [4, 5], type: 'date-sort' },
         ],
         scrollCollapse: true,
         scrollY: '400px'
