@@ -38,6 +38,17 @@ const titleDict = {
 
 let datatableTarget = null
 
+const datatablePageJump = () => {
+    let pageNo = parseInt(document.getElementById('pageInput').value);
+
+    if (pageNo > datatableTarget.page.info().pages) {
+        alert(`Number is larger than maximum page number. Aborted.`)
+        return
+    }
+
+    datatableTarget.page(pageNo-1).draw(false);
+}
+
 const DOMContentLoadedHandler = () => {
     const convertToDate = (dateStr, format) => {
         switch (format) {
@@ -62,14 +73,27 @@ const DOMContentLoadedHandler = () => {
         }
     });
 
+    let pagetool = document.createElement('div')
+    pagetool.innerHTML = `<input id='pageInput' name='pageInput' /><input type='button' onclick='datatablePageJump()' value='Go' />`
+
+
     datatableTarget = new DataTable('#example', {
+        // layout: {
+        //     topStart: 'pageLength',
+        //     topEnd: {
+        //         'search':{
+        //             placeholder: 'Search'
+        //         }
+        //     },
+        //     bottomStart: 'info',
+        //     bottomEnd: 'paging'
+        // },
         layout: {
-            topStart: 'pageLength',
-            topEnd: {
-                'search':{
-                    placeholder: 'Search'
-                }
+            top: {
+                features: ['search']
             },
+            topStart: 'pageLength',
+            topEnd: pagetool,
             bottomStart: 'info',
             bottomEnd: 'paging'
         },
