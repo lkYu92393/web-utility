@@ -19,16 +19,18 @@ const randomDateGen = (startYear) => {
     return date
 }
 
-const dataSrc = Array(30).fill().map((_, index) => {
-    return {
-        id: index,
-        firstName: firstNameList[Math.round(Math.random() * (firstNameList.length-1))],
-        lastName: lastNameList[Math.round(Math.random() * (lastNameList.length - 1))],
-        age: Math.round(Math.random() * 30) + 18,
-        startDate: randomDateGen(2000),
-        endDate: randomDateGen(2011),
-    }
-})
+const dataSrcFunc = (noOfRecord) => {
+    return Array(noOfRecord).fill().map((_, index) => {
+        return {
+            id: index,
+            firstName: firstNameList[Math.round(Math.random() * (firstNameList.length-1))],
+            lastName: lastNameList[Math.round(Math.random() * (lastNameList.length - 1))],
+            age: Math.round(Math.random() * 30) + 18,
+            startDate: randomDateGen(2000),
+            endDate: randomDateGen(2011),
+        }
+    })
+}
 
 const titleDict = {
 }
@@ -51,10 +53,7 @@ const DOMContentLoadedHandler = () => {
             const temp_1 = convertToDate(val_1, 'yyyy-MM-dd')
             const temp_2 = convertToDate(val_2, 'yyyy-MM-dd')
             return temp_1 > temp_2 ? 1 : -1
-        }
-    });
-
-    $.extend($.fn.dataTable.ext.type.order, {
+        },
         "date-sort-desc": function (val_1, val_2) {
             const temp_1 = convertToDate(val_1, 'yyyy-MM-dd')
             const temp_2 = convertToDate(val_2, 'yyyy-MM-dd')
@@ -63,7 +62,15 @@ const DOMContentLoadedHandler = () => {
     });
 
     datatableTarget = new DataTable('#example', {
-        data: dataSrc,
+        layout: {
+            // topStart: 'info',
+            topEnd: {
+                search: {
+                    placeholder: 'Search'
+                }
+            }
+        },
+        data: dataSrcFunc(200),
         columns: [
             { data: 'id', visible: false },
             { data: (row) => { return `${row.firstName} ${row.lastName}`}, width: '30%' },
@@ -77,6 +84,7 @@ const DOMContentLoadedHandler = () => {
         scrollCollapse: true,
         scrollY: '400px'
     })
+    $.fn.DataTable.ext.pager.numbers_length = 3;
 }
 
 document.addEventListener("DOMContentLoaded", DOMContentLoadedHandler)
