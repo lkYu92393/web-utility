@@ -8,14 +8,14 @@
 //     { title: "Dog", amount: 2346, hidden: 123, startDate: "2021-01-01", endDate: "2012-01-02" },
 // ]
 
-const firstNameList = ['Liam','Noah','Oliver','James','Elijah','Mateo','Theodore','Henry','Lucas','William']
-const lastNameList = ['Smith','Johnson','Brown','Jones','Miller','Davis','Martinez','Lopez','Thomas','Moore']
+const firstNameList = ['Liam', 'Noah', 'Oliver', 'James', 'Elijah', 'Mateo', 'Theodore', 'Henry', 'Lucas', 'William']
+const lastNameList = ['Smith', 'Johnson', 'Brown', 'Jones', 'Miller', 'Davis', 'Martinez', 'Lopez', 'Thomas', 'Moore']
 const randomDateGen = (startYear) => {
     const year = (Math.round(Math.random() * 10) + startYear).toString()
     const month = (Math.round(Math.random() * 11) + 1).toString()
     const day = (Math.round(Math.random() * 27) + 1).toString()
     // const date = (year + (month.length == 1 ? '-0' : '-') + month + (day.length == 1 ? '-0':'-') + day)
-    const date = year + '-' + month.padStart(2, '0') + '-'  + day.padStart(2, '0')
+    const date = year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0')
     return date
 }
 
@@ -73,8 +73,14 @@ const DOMContentLoadedHandler = () => {
         data: dataSrcFunc(200),
         columns: [
             { data: 'id', visible: false },
-            { data: (row) => { return `${row.firstName} ${row.lastName}`}, width: '30%' },
+            { data: (row) => { return `${row.firstName} ${row.lastName}` }, width: '30%' },
             { data: 'age' },
+            { 
+                data: 'salary', render: (data, type) => {
+                    const number = DataTable.render.number(',', '.', 2, '$').display(data)
+                    return number
+            } 
+        },
             { data: 'startDate' },
             { data: 'endDate' },
         ],
