@@ -38,16 +38,6 @@ const titleDict = {
 
 let datatableTarget = null
 
-const datatablePageJump = () => {
-    let pageNo = parseInt(document.getElementById('pageInput').value);
-
-    if (pageNo > datatableTarget.page.info().pages) {
-        alert(`Number is larger than maximum page number. Aborted.`)
-        return
-    }
-
-    datatableTarget.page(pageNo-1).draw(false);
-}
 
 const DOMContentLoadedHandler = () => {
     const convertToDate = (dateStr, format) => {
@@ -73,9 +63,30 @@ const DOMContentLoadedHandler = () => {
         }
     });
 
-    let pagetool = document.createElement('div')
-    pagetool.innerHTML = `<input id='pageInput' name='pageInput' /><input type='button' onclick='datatablePageJump()' value='Go' />`
+    let pageJumpTool = document.createElement('div')
+    pageJumpTool.innerHTML = `<label>Jump to page: </label><input id='pageInput' name='pageInput' style='width:50px;' /><input type='button' id='pageJumpButton' value='Go' style='width:50px;' />`
 
+    const datatablePageJumpInputHandler = (ev) => {
+        if (ev.keyCode === 13) {
+            ev.preventDefault()
+            datatablePageJumpButtonHandler()
+        }
+    }
+
+    const datatablePageJumpButtonHandler = () => {
+        let pageNo = parseInt(document.getElementById('pageInput').value);
+
+        if (pageNo > datatableTarget.page.info().pages) {
+            alert(`Number is larger than maximum page number. Aborted.`)
+            return
+        }
+
+        datatableTarget.page(pageNo-1).draw(false);
+        document.getElementById('pageInput').value = '';
+    }
+
+    let pagingTool = document.createElement('div')
+    pagingTool.innerHTML = `<button class='dt-paging-button first' ><<</button>`
 
     datatableTarget = new DataTable('#example', {
         // layout: {
@@ -93,9 +104,13 @@ const DOMContentLoadedHandler = () => {
                 features: ['search']
             },
             topStart: 'pageLength',
-            topEnd: pagetool,
+            topEnd: pageJumpTool,
             bottomStart: 'info',
             bottomEnd: 'paging'
+        },
+        initComplete: () => {
+            document.getElementById('pageInput').addEventListener('keypress', datatablePageJumpInputHandler)
+            document.getElementById('pageJumpButton').addEventListener('click', datatablePageJumpButtonHandler)
         },
         data: dataSrcFunc(200),
         columns: [
