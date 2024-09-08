@@ -115,6 +115,8 @@ const DOMContentLoadedHandler = () => {
         data: dataSrcFunc(200),
         columns: [
             { data: 'id', visible: false },
+            { data: 'firstName', visible: false },
+            { data: 'lastName', visible: false },
             { data: (row) => { return `${row.firstName} ${row.lastName}` }, width: '30%' },
             { data: 'age' },
             { 
@@ -127,8 +129,9 @@ const DOMContentLoadedHandler = () => {
             { data: 'endDate' },
         ],
         columnDefs: [
-            { target: [3], className: 'dt-body-right' },
-            { target: [4, 5], type: 'date-sort' },
+            { target: [3], orderData: [1,2]},
+            { target: [5], className: 'dt-body-right' },
+            { target: [6, 7], type: 'date-sort' },
         ],
         scrollCollapse: true,
         scrollY: '400px'
