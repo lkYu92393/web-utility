@@ -108,6 +108,7 @@ const DOMContentLoadedHandler = () => {
             bottomStart: 'info',
             bottomEnd: 'paging'
         },
+        autoWidth: true,
         initComplete: () => {
             document.getElementById('pageInput').addEventListener('keypress', datatablePageJumpInputHandler)
             document.getElementById('pageJumpButton').addEventListener('click', datatablePageJumpButtonHandler)
@@ -117,7 +118,7 @@ const DOMContentLoadedHandler = () => {
             { data: 'id', visible: false },
             { data: 'firstName', visible: false },
             { data: 'lastName', visible: false },
-            { data: (row) => { return `${row.firstName} ${row.lastName}` }, width: '30%' },
+            { data: (row) => { return `${row.firstName} ${row.lastName}` }, title: 'Name' },
             { data: 'age' },
             { 
                 data: 'salary', render: (data, type) => {
