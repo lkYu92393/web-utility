@@ -8,11 +8,6 @@
 //     { title: "Dog", amount: 2346, hidden: 123, startDate: "2021-01-01", endDate: "2012-01-02" },
 // ]
 
-Object.assign(DataTable.defaults, {
-    searching: false,
-    ordering: false
-});
-
 const firstNameList = ['Liam', 'Noah', 'Oliver', 'James', 'Elijah', 'Mateo', 'Theodore', 'Henry', 'Lucas', 'William']
 const lastNameList = ['Smith', 'Johnson', 'Brown', 'Jones', 'Miller', 'Davis', 'Martinez', 'Lopez', 'Thomas', 'Moore']
 const randomDateGen = (startYear) => {
