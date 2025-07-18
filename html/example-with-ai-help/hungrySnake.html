@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hungry Snake Game</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: auto;
+            background-color: #f0f0f0;
+        }
+        #controls {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Hungry Snake Game</h1>
+    <div id="controls">
+        <label for="difficulty">Choose Difficulty: </label>
+        <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="normal" selected>Normal</option>
+            <option value="hard">Hard</option>
+        </select>
+    </div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const box = 20; // Size of the square
+        let snake, direction, food;
+        let gameInterval;
+        let speed = 100; // Default speed for normal difficulty
+        let isGameRunning = false; // Track if the game is currently running
+
+        document.addEventListener('keydown', handleKeyPress);
+        document.getElementById('difficulty').addEventListener('change', setDifficulty);
+
+        function setDifficulty() {
+            const difficulty = document.getElementById('difficulty').value;
+            if (difficulty === 'easy') {
+                speed = 150; // Easy speed
+            } else if (difficulty === 'normal') {
+                speed = 100; // Normal speed
+            } else if (difficulty === 'hard') {
+                speed = 50; // Hard speed
+            }
+            if (isGameRunning) {
+                clearInterval(gameInterval); // Clear existing interval
+                gameInterval = setInterval(draw, speed); // Set new interval
+            }
+        }
+
+        function startGame() {
+            snake = [{ x: 9 * box, y: 9 * box }]; // Initial snake position
+            direction = 'RIGHT'; // Initial direction
+            food = spawnFood();
+            clearInterval(gameInterval); // Clear any existing game intervals
+            isGameRunning = true; // Set game state to running
+            gameInterval = setInterval(draw, speed); // Start the game loop
+        }
+
+        function spawnFood() {
+            return {
+                x: Math.floor(Math.random() * (canvas.width / box)) * box,
+                y: Math.floor(Math.random() * (canvas.height / box)) * box,
+            };
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === ' ' && !isGameRunning) {
+                startGame(); // Start or restart the game only if not running
+            } else {
+                changeDirection(event);
+            }
+        }
+
+        function changeDirection(event) {
+            if (event.key === 'ArrowUp' && direction !== 'DOWN') direction = 'UP';
+            if (event.key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
+            if (event.key === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
+            if (event.key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw food
+            ctx.fillStyle = 'red';
+            ctx.fillRect(food.x, food.y, box, box);
+
+            // Move snake
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
+
+            if (direction === 'UP') snakeY -= box;
+            if (direction === 'DOWN') snakeY += box;
+            if (direction === 'LEFT') snakeX -= box;
+            if (direction === 'RIGHT') snakeX += box;
+
+            // Check if snake eats the food
+            if (snakeX === food.x && snakeY === food.y) {
+                food = spawnFood(); // Spawn new food
+            } else {
+                snake.pop(); // Remove the tail
+            }
+
+            // Add new head
+            const newHead = { x: snakeX, y: snakeY };
+            snake.unshift(newHead);
+
+            // Draw snake
+            ctx.fillStyle = 'green';
+            snake.forEach(segment => {
+                ctx.fillRect(segment.x, segment.y, box, box);
+            });
+
+            // Check collisions with walls or self
+            if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead)) {
+                clearInterval(gameInterval);
+                isGameRunning = false; // Set game state to not running
+                alert('Game Over! Press Space to Restart.');
+            }
+        }
+
+        function collision(head) {
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true; // Collision detected
+                }
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
