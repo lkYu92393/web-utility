@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        #gameBoard {
+            display: grid;
+            margin: auto;
+            grid-template-columns: repeat(10, 30px);
+            grid-template-rows: repeat(10, 30px);
+            gap: 2px;
+            justify-content: center; /* Center grid */
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s; /* Smooth transition */
+        }
+        .cell:hover {
+            background-color: #e0e0e0; /* Change color on hover */
+        }
+        .revealed {
+            background-color: #fff; /* Revealed cells remain white */
+        }
+        .mine {
+            background-color: red;
+        }
+        .cell.revealed:hover {
+            background-color: #fff; /* Prevent hover effect on revealed cells */
+        }
+    </style>
+</head>
+<body>
+    <h1>Minesweeper</h1>
+    <div id="gameBoard"></div>
+    <button id="resetButton">Reset Game</button>
+    <script>
+        const rows = 10;
+        const cols = 10;
+        const minesCount = 15;
+        let board = [];
+        let revealedCells = 0;
+        let gameOver = false; // Track if the game is over
+        let firstClick = true; // Track the first click
+
+        document.getElementById('resetButton').addEventListener('click', resetGame);
+        resetGame();
+
+        function resetGame() {
+            board = Array(rows).fill(null).map(() => Array(cols).fill(0));
+            revealedCells = 0;
+            gameOver = false; // Reset game over state
+            firstClick = true; // Reset first click state
+            createBoard();
+        }
+
+        function placeMines(firstRow, firstCol) {
+            let minesPlaced = 0;
+            while (minesPlaced < minesCount) {
+                const row = Math.floor(Math.random() * rows);
+                const col = Math.floor(Math.random() * cols);
+                // Ensure mine is not placed in the first click cell or adjacent cells
+                if (board[row][col] !== 'M' && !(Math.abs(row - firstRow) <= 1 && Math.abs(col - firstCol) <= 1)) {
+                    board[row][col] = 'M';
+                    minesPlaced++;
+                }
+            }
+        }
+
+        function calculateAdjacentMines() {
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    if (board[row][col] === 'M') continue;
+
+                    let count = 0;
+                    for (let r = row - 1; r <= row + 1; r++) {
+                        for (let c = col - 1; c <= col + 1; c++) {
+                            if (r >= 0 && r < rows && c >= 0 && c < cols && board[r][c] === 'M') {
+                                count++;
+                            }
+                        }
+                    }
+                    board[row][col] = count;
+                }
+            }
+        }
+
+        function createBoard() {
+            const gameBoard = document.getElementById('gameBoard');
+            gameBoard.innerHTML = '';
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+
+                    cell.addEventListener('click', () => revealCell(row, col));
+
+                    gameBoard.appendChild(cell);
+                }
+            }
+        }
+
+        function revealCell(row, col) {
+            if (gameOver) return; // Prevent action if game is over
+
+            if (firstClick) {
+                placeMines(row, col); // Place mines after the first click
+                calculateAdjacentMines(); // Calculate adjacent mines
+                firstClick = false; // Mark first click as done
+            }
+
+            const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+
+            if (cell.classList.contains('revealed')) return;
+
+            cell.classList.add('revealed');
+            revealedCells++;
+
+            if (board[row][col] === 'M') {
+                cell.classList.add('mine');
+                alert('Game Over! You hit a mine.');
+                gameOver = true; // Set game over state
+                revealAllMines();
+                return;
+            }
+
+            cell.textContent = board[row][col] > 0 ? board[row][col] : '';
+            if (board[row][col] === 0) {
+                // Reveal adjacent cells if this cell is empty
+                for (let r = row - 1; r <= row + 1; r++) {
+                    for (let c = col - 1; c <= col + 1; c++) {
+                        if (r >= 0 && r < rows && c >= 0 && c < cols) {
+                            revealCell(r, c);
+                        }
+                    }
+                }
+            }
+
+            if (revealedCells === rows * cols - minesCount) {
+                alert('Congratulations! You won the game!');
+                gameOver = true; // Set game over state
+            }
+        }
+
+        function revealAllMines() {
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    if (board[row][col] === 'M') {
+                        const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+                        cell.classList.add('mine');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
